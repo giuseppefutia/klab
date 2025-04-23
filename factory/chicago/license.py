@@ -123,7 +123,7 @@ def chi_licenses_importer_factory(base_importer_cls, backend: str):
             MERGE (n:Organization {id: item.`ACCOUNT NUMBER`})
             WITH n, item
             MATCH (m:PersonRecord {employerId: item.`ACCOUNT NUMBER`})-[:RECORD_RESOLVED_TO]->(p:Person)
-            MERGE (p)-[r:BELONGS_TO_ORG]->(n)
+            MERGE (p)-[r:WORKS_FOR_ORG]->(n)
             SET r.roles = p.titles
             """
             size = self.get_csv_size(licenses_file)
@@ -147,7 +147,7 @@ def chi_licenses_importer_factory(base_importer_cls, backend: str):
     
             logging.info("Connecting organizations to licenses...")
             self.connect_org_to_license(license_file)
-    
+
             logging.info("Connecting people to organizations...")
             self.connect_people_to_org(license_file)
 

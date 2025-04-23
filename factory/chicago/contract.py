@@ -1,4 +1,3 @@
-
 def chi_contracts_importer_factory(base_importer_cls, backend: str):
     import logging
 
@@ -112,6 +111,7 @@ def chi_contracts_importer_factory(base_importer_cls, backend: str):
             MERGE (n:Contract {id: item.`Purchase Order (Contract) Number`})
             SET n.name = apoc.text.join(n.names, " + ")
             MERGE (m:Department {id: coalesce(item.Department, "Unknown")})
+            SET m.source = "CONTRACTS"
             MERGE (o:ContractType {id: coalesce(item.`Contract Type`, "Unknown")})
             MERGE (m)-[:ASSIGNS_CONTRACT]->(n)
             MERGE (n)-[:HAS_CONTRACT_TYPE]->(o)

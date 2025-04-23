@@ -108,14 +108,14 @@ object_property_mappings = {
         """
     },
     "HAS_LICENSE": {
-        "src_uri": "http://purl.org/goodrelations/v1#License",
+        "src_uri": "http://purl.org/goodrelations/v1#BusinessEntity",
         "rel_uri": "http://purl.org/goodrelations/v1#hasLicense",
-        "dst_uri": "http://purl.org/goodrelations/v1#BusinessEntity",
+        "dst_uri": "http://purl.org/goodrelations/v1#License",
         "query": """
             MATCH (l:LicenseRecord)<-[:ORG_HAS_LICENSE]-(:Organization)-[:BELONGS_TO_ORG_GROUP]->(o:OrganizationGroup)
             WHERE elementId(o) STARTS WITH "4:abd68729-dd06-4625-953e-eb0794c34b91:272" OR
                   elementId(o) STARTS WITH "4:abd68729-dd06-4625-953e-eb0794c34b91:271"
-            RETURN DISTINCT elementId(l) as src_id, elementId(o) as dst_id
+            RETURN DISTINCT elementId(o) as src_id, elementId(l) as dst_id
         """
     }
 }
