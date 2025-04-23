@@ -2,7 +2,7 @@
 
 The Knowledge Laboratory (KLAB) - A hub for learning, conducting research, and building community on knowledge technologies.
 
-## Building a Hybrid Knowledge Graph System
+## Building a Hybrid Knowledge Graph System
 
 Integrating LPG, RDF, and LLMs for Advanced Analytics.
 
