@@ -1,28 +1,35 @@
+filter_1 = "4:ad071729-f045-4446-b65d-b2e7706dde7b:225"
+filter_2 = "4:ad071729-f045-4446-b65d-b2e7706dde7b:226"
+filter_3 = "4:ad071729-f045-4446-b65d-b2e7706dde7b:227"
+
 entity_mappings = {
     "Contract": {
-        "uri": "http://purl.org/procurement/public-contracts#Contract",
-        "query": """
-            MATCH (n:Contract)<-[:INCLUDED_IN_CONTRACT]-(:ContractRecord)-[:HAS_VENDOR]->(:Organization)-[:BELONGS_TO_ORG_GROUP]->(o:OrganizationGroup)
-            WHERE elementId(o) STARTS WITH "4:abd68729-dd06-4625-953e-eb0794c34b91:272" OR
-                  elementId(o) STARTS WITH "4:abd68729-dd06-4625-953e-eb0794c34b91:271"
-            RETURN DISTINCT n
-            """
+    "uri": "http://purl.org/procurement/public-contracts#Contract",
+    "query": f"""
+        MATCH (n:Contract)<-[:INCLUDED_IN_CONTRACT]-(:ContractRecord)-[:HAS_VENDOR]->(:Organization)-[:BELONGS_TO_ORG_GROUP]->(o:OrganizationGroup)
+        WHERE elementId(o) STARTS WITH "{filter_1}" OR
+                elementId(o) STARTS WITH "{filter_2}" OR
+                elementId(o) STARTS WITH "{filter_3}"
+        RETURN DISTINCT n
+        """
     },
     "OrganizationGroup": {
         "uri": "http://purl.org/goodrelations/v1#BusinessEntity",
-        "query": """
+        "query": f"""
             MATCH (n:OrganizationGroup)
-            WHERE elementId(n) STARTS WITH "4:abd68729-dd06-4625-953e-eb0794c34b91:272" OR
-                  elementId(n) STARTS WITH "4:abd68729-dd06-4625-953e-eb0794c34b91:271"
+            WHERE elementId(n) STARTS WITH "{filter_1}" OR
+                  elementId(n) STARTS WITH "{filter_2}" OR
+                  elementId(n) STARTS WITH "{filter_3}"
             RETURN DISTINCT n
             """
     },
     "LicenseRecord": {
         "uri": "http://purl.org/goodrelations/v1#License",
-        "query": """
+        "query": f"""
             MATCH (n:LicenseRecord)<-[:ORG_HAS_LICENSE]-(:Organization)-[:BELONGS_TO_ORG_GROUP]->(o:OrganizationGroup)
-            WHERE elementId(o) STARTS WITH "4:abd68729-dd06-4625-953e-eb0794c34b91:272" OR
-                  elementId(o) STARTS WITH "4:abd68729-dd06-4625-953e-eb0794c34b91:271"
+            WHERE elementId(o) STARTS WITH "{filter_1}" OR
+                  elementId(o) STARTS WITH "{filter_2}" OR
+                  elementId(o) STARTS WITH "{filter_3}"
             RETURN DISTINCT n"""
 
     }
@@ -100,10 +107,11 @@ object_property_mappings = {
         "src_uri": "http://purl.org/procurement/public-contracts#Contract",
         "rel_uri": "http://purl.org/procurement/public-contracts#bidder",
         "dst_uri": "http://purl.org/goodrelations/v1#BusinessEntity",
-        "query": """
+        "query": f"""
             MATCH (c:Contract)<-[:INCLUDED_IN_CONTRACT]-(:ContractRecord)-[:HAS_VENDOR]->(:Organization)-[:BELONGS_TO_ORG_GROUP]->(o:OrganizationGroup)
-            WHERE elementId(o) STARTS WITH "4:abd68729-dd06-4625-953e-eb0794c34b91:272" OR
-                  elementId(o) STARTS WITH "4:abd68729-dd06-4625-953e-eb0794c34b91:271"
+            WHERE elementId(o) STARTS WITH "{filter_1}" OR
+                  elementId(o) STARTS WITH "{filter_2}" OR
+                  elementId(o) STARTS WITH "{filter_3}"
             RETURN DISTINCT elementId(c) as src_id, elementId(o) as dst_id
         """
     },
@@ -111,10 +119,11 @@ object_property_mappings = {
         "src_uri": "http://purl.org/goodrelations/v1#BusinessEntity",
         "rel_uri": "http://purl.org/goodrelations/v1#hasLicense",
         "dst_uri": "http://purl.org/goodrelations/v1#License",
-        "query": """
+        "query": f"""
             MATCH (l:LicenseRecord)<-[:ORG_HAS_LICENSE]-(:Organization)-[:BELONGS_TO_ORG_GROUP]->(o:OrganizationGroup)
-            WHERE elementId(o) STARTS WITH "4:abd68729-dd06-4625-953e-eb0794c34b91:272" OR
-                  elementId(o) STARTS WITH "4:abd68729-dd06-4625-953e-eb0794c34b91:271"
+            WHERE elementId(o) STARTS WITH "{filter_1}" OR
+                  elementId(o) STARTS WITH "{filter_2}" OR
+                  elementId(o) STARTS WITH "{filter_3}"
             RETURN DISTINCT elementId(o) as src_id, elementId(l) as dst_id
         """
     }

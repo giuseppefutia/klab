@@ -17,7 +17,7 @@ def main():
     )
 
     converter.convert(
-        output_file="data/chichago/chicago.ttl",
+        output_file="data/chicago/chicago.ttl",
         serialization_format="turtle"
     )
 

@@ -16,6 +16,7 @@ class Neo4jToRDFConverter:
         self.computed_data_property_mappings = computed_data_property_mappings
         self.object_property_mappings = object_property_mappings
         self.namespaces = namespaces
+        self.batch_size = 5000
 
         self.graph = Graph()
         self.driver = Neo4jGraphDB()._driver
