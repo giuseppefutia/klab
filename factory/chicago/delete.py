@@ -22,12 +22,11 @@ def chi_delete_node_factory(base_importer_cls, backend: str):
                     session.run(query)
 
         def apply_updates(self):
-            logging.info("Deleting nodes")
+            logging.info("Start deleting nodes and relations...")
             self.delete_nodes_by_label(["Person",
                                         "PersonRecord",
                                         "Organization",
                                         "LicenseRecord",
-                                        "License",
                                         "LicenseType",
                                         "OrganizationGroup",
                                         "Contract",
