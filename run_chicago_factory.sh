@@ -21,9 +21,11 @@ echo "" | tee -a "$LOG_FILE"
 
 # Run all steps
 run_step python -m factory.chicago.owner --backend neo4j --file Business_Owners_20240103.csv
-run_step python -m factory.chicago.owner_cluster --backend neo4j
+run_step python -m factory.chicago.employee --backend neo4j --file Employees_20250422.csv
+run_step python -m factory.chicago.people_cluster --backend neo4j
 run_step python -m factory.chicago.contract --backend neo4j --file Contracts_20240103.csv
 run_step python -m factory.chicago.license --backend neo4j --file Business_Licenses_20240103.csv
 run_step python -m factory.chicago.org_cluster --backend neo4j
+run_step python -m factory.chicago.dept_similarity --backend neo4j
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Pipeline completed successfully." | tee -a "$LOG_FILE"
