@@ -1,6 +1,27 @@
-filter_1 = "4:ad071729-f045-4446-b65d-b2e7706dde7b:225"
-filter_2 = "4:ad071729-f045-4446-b65d-b2e7706dde7b:226"
-filter_3 = "4:ad071729-f045-4446-b65d-b2e7706dde7b:227"
+# TODO: These filters should be defined manually with the following query:
+"""
+MATCH p=(l:LicenseRecord)-[:ORG_HAS_LICENSE]-(n:Organization)-[r:IS_SIMILAR_TO]-(m:Organization)<-[:HAS_VENDOR]-(c:ContractRecord)
+WHERE m.source = "CONTRACTS" AND n.source = "LICENSES" AND
+c.startDate IS NOT NULL AND
+l.endDate IS NOT NULL
+// Change date format
+WITH n, m,
+apoc.date.parse(c.startDate, "ms", "MM/dd/yyyy") AS startDate,
+apoc.date.parse(l.endDate, "ms", "MM/dd/yyyy") as endDate
+// Process date string as dates
+WITH n, m,
+date(datetime({epochmillis: startDate})) AS startDate,
+date(datetime({epochmillis: endDate})) AS endDate
+WITH n, m, min(startDate) as ContractDate, max(endDate) as LicenseDate
+WHERE ContractDate > LicenseDate
+WITH n
+MATCH (n)-[:BELONGS_TO_ORG_GROUP]->(og:OrganizationGroup)
+RETURN elementId(og)
+"""
+
+
+filter_1 = "4:5bc9e9e3-9f8e-4060-84df-00fa505e2753:231"
+filter_2 = "4:5bc9e9e3-9f8e-4060-84df-00fa505e2753:232"
 
 entity_mappings = {
     "Contract": {
@@ -8,8 +29,7 @@ entity_mappings = {
     "query": f"""
         MATCH (n:Contract)<-[:INCLUDED_IN_CONTRACT]-(:ContractRecord)-[:HAS_VENDOR]->(:Organization)-[:BELONGS_TO_ORG_GROUP]->(o:OrganizationGroup)
         WHERE elementId(o) STARTS WITH "{filter_1}" OR
-                elementId(o) STARTS WITH "{filter_2}" OR
-                elementId(o) STARTS WITH "{filter_3}"
+                elementId(o) STARTS WITH "{filter_2}"
         RETURN DISTINCT n
         """
     },
@@ -18,8 +38,7 @@ entity_mappings = {
         "query": f"""
             MATCH (n:OrganizationGroup)
             WHERE elementId(n) STARTS WITH "{filter_1}" OR
-                  elementId(n) STARTS WITH "{filter_2}" OR
-                  elementId(n) STARTS WITH "{filter_3}"
+                  elementId(n) STARTS WITH "{filter_2}"
             RETURN DISTINCT n
             """
     },
@@ -28,8 +47,7 @@ entity_mappings = {
         "query": f"""
             MATCH (n:LicenseRecord)<-[:ORG_HAS_LICENSE]-(:Organization)-[:BELONGS_TO_ORG_GROUP]->(o:OrganizationGroup)
             WHERE elementId(o) STARTS WITH "{filter_1}" OR
-                  elementId(o) STARTS WITH "{filter_2}" OR
-                  elementId(o) STARTS WITH "{filter_3}"
+                  elementId(o) STARTS WITH "{filter_2}"
             RETURN DISTINCT n"""
 
     }
@@ -110,8 +128,7 @@ object_property_mappings = {
         "query": f"""
             MATCH (c:Contract)<-[:INCLUDED_IN_CONTRACT]-(:ContractRecord)-[:HAS_VENDOR]->(:Organization)-[:BELONGS_TO_ORG_GROUP]->(o:OrganizationGroup)
             WHERE elementId(o) STARTS WITH "{filter_1}" OR
-                  elementId(o) STARTS WITH "{filter_2}" OR
-                  elementId(o) STARTS WITH "{filter_3}"
+                  elementId(o) STARTS WITH "{filter_2}"
             RETURN DISTINCT elementId(c) as src_id, elementId(o) as dst_id
         """
     },
@@ -122,8 +139,7 @@ object_property_mappings = {
         "query": f"""
             MATCH (l:LicenseRecord)<-[:ORG_HAS_LICENSE]-(:Organization)-[:BELONGS_TO_ORG_GROUP]->(o:OrganizationGroup)
             WHERE elementId(o) STARTS WITH "{filter_1}" OR
-                  elementId(o) STARTS WITH "{filter_2}" OR
-                  elementId(o) STARTS WITH "{filter_3}"
+                  elementId(o) STARTS WITH "{filter_2}"
             RETURN DISTINCT elementId(o) as src_id, elementId(l) as dst_id
         """
     }
