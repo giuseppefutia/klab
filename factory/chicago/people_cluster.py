@@ -125,16 +125,14 @@ def chi_people_similarity_factory(base_importer_cls, backend: str):
 
         def project_louvain_graph(self):
             query = """
-            MATCH (source:PersonRecord)-[r:IS_SIMILAR_TO]->(target)
-            WITH source, target, collect(r.score) as scores
-            WITH source, target, apoc.coll.sum(scores) as total_score
-            CALL gds.graph.project(
+            MATCH (source:PersonRecord)-[r:IS_SIMILAR_TO]->(target:PersonRecord)
+            RETURN gds.graph.project(
                 'personLouvain',
                 source,
                 target,
-                {relationshipProperties: {total_score: total_score}}
-            ) YIELD graphName, nodeCount, relationshipCount
-            RETURN graphName, nodeCount, relationshipCount
+                { relationshipProperties: r { .score } },
+                { undirectedRelationshipTypes: ['*'] }
+            )
             """
             with self._driver.session() as session:
                 session.run(query)
