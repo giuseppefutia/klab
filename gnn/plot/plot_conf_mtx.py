@@ -5,7 +5,7 @@ import numpy as np
 from sklearn.metrics import confusion_matrix
 from matplotlib.colors import LinearSegmentedColormap
 
-from klab.eval.eval_funcs import predict, predict_batched
+from klab.gnn.eval.eval_funcs import predict, predict_batched
 
 def generate_confusion_matrices(models, data, mask_type="test"):
     """

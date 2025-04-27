@@ -4,7 +4,7 @@ import math
 import torch
 from tqdm import tqdm
 
-from klab.eval.eval_funcs import predict_probabilities
+from klab.gnn.eval.eval_funcs import predict_probabilities
 
 def show_roc_curve(ax, model_name, data, probabilities, mapped_classes):
     """

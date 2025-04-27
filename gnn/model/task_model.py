@@ -1,6 +1,6 @@
 import torch
 import torch.nn.functional as F
-from klab.model.util_model import MovieLensEmbedding, DotProduct
+from klab.gnn.model.util_model import MovieLensEmbedding, DotProduct
 
 # ---------------- #
 # Node Classifiers #
