@@ -53,6 +53,8 @@ To convert a subset of the CKG into an RDF graph, run the following command:
 python -m factory.chicago.rdf_mapper --backend neo4j
 ```
 
+_________________
+
 ## Unlocking Graph Neural Networks: A Hands-on Journey from Basics to Breakthroughs
 
 ## Theory
