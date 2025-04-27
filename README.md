@@ -55,7 +55,9 @@ python -m factory.chicago.rdf_mapper --backend neo4j
 
 _________________
 
-## Unlocking Graph Neural Networks: A Hands-on Journey from Basics to Breakthroughs
+## Unlocking Graph Neural Networks
+
+A Hands-on Journey from Basics to Breakthroughs
 
 ## Theory
 * [Traditional Graph-based Features](https://colab.research.google.com/drive/1ycjxFUqmV9K1UO15969QZvU3IJo3IgCD?usp=sharing)
