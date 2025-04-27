@@ -1,5 +1,5 @@
 from sklearn.metrics import classification_report
-from kg-lab.eval.eval_funcs import predict
+from klab.eval.eval_funcs import predict
 
 def show_classification_reports(model_name, data, train_pred, test_pred, mapped_classes):
     """

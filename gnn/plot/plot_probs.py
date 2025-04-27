@@ -2,7 +2,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from kg-lab.eval.eval_funcs import predict_probabilities, predict_probabilities_batched
+from klab.eval.eval_funcs import predict_probabilities, predict_probabilities_batched
 
 def compute_probabilities(models, data, metrics, mask_types=["test"]):
     """
