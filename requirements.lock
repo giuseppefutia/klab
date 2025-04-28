@@ -7,3 +7,4 @@ neo4j==5.28.1
 langchain==0.3.23
 langchain-openai==0.3.14
 langgraph==0.3.31
+yfiles-jupyter-graphs-for-neo4j==1.7.0
