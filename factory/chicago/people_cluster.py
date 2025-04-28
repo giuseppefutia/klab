@@ -140,7 +140,7 @@ def chi_people_similarity_factory(base_importer_cls, backend: str):
         def run_louvain(self):
             query = """
             CALL gds.louvain.write('personLouvain', {
-                relationshipWeightProperty: 'total_score',
+                relationshipWeightProperty: 'score',
                 writeProperty: 'louvainIntermediateCommunities',
                 includeIntermediateCommunities: true
             })
