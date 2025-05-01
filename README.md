@@ -19,9 +19,14 @@ source venv/bin/activate
 pip install -r requirements.lock
 ```
 
-### Create the Chicago Knowledge Graph (CKG)
+### Download the Data
+For building the Knowledge Graph, you can download the data from this folder: https://drive.google.com/drive/folders/1ixLVq2xwdFMGfUBt8u2aVp5nZQnjseOW?usp=sharing. This files must be saved in the `data/chicago/` folder in the root repository.
 
-To create the CKG, you can run the following command:
+Alternatively, from the same folder, you can directly download the `neo4.dump` file and load it into your database. The dump has been created with the `5.26.4` version of Neo4j enterprise edition. In this scenario, you can locally run the notebooks mentioned in the `Use Case Analysis` section.
+
+### Build the Chicago Knowledge Graph (CKG)
+
+To create the CKG, you can run the following command \Sfrom the root folder:
 
 ```bash
 ./run_chicago_factory.sh
@@ -50,8 +55,15 @@ python -m factory.chicago.delete --backend neo4j
 To convert a subset of the CKG into an RDF graph, run the following command:
 
 ```bash
-python -m factory.chicago.rdf_mapper --backend neo4j
+python -m analysis.chicago.regulatory_compliance.rdf_mapper --backend neo4j
+python -m analysis.chicago.conflict_of_interest.mapper --backend neo4j
+python -m analysis.chicago.three_sixty_degree_view.mapper --backend neo4j
 ```
+
+### Use Case Analysis
+* [Regulatory Compliance](/analysis/chicago/01_regulatory_compliance.ipynb)
+* [Conflict of Interest](/analysis/chicago/02_conflict_of_interest.ipynb)
+* [360-Degree View](analysis/chicago/03_three_sixty_degree_view.ipynb)
 
 _________________
 
