@@ -1,5 +1,5 @@
 from mapper.convert import Neo4jToRDFConverter
-from factory.chicago.mappings import (
+from analysis.chicago.regulatory_compliance.mapping import (
     entity_mappings,
     data_property_mappings,
     computed_data_property_mappings,
@@ -17,7 +17,7 @@ def main():
     )
 
     converter.convert(
-        output_file="data/chicago/chicago.ttl",
+        output_file="data/chicago/compliance.ttl",
         serialization_format="turtle"
     )
 
