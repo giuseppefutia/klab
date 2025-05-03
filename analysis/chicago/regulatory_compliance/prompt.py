@@ -38,6 +38,7 @@ AGENT_PROMPTS = {
     "explain":
         """ "Please perform the following:\n"
         "0. Based on the RDF schema and a message of the validation goal, generate a SPARQL query for SHACL validation. {rdf_schema}, {message}\n"
+        "   a. Report also the generated SPARQL query for SHACL validation.\n"
         "1. Run the SHACL validation and summarize the SHACL validation issues.\n"
         "2. Explain how each issue can be fixed.\n"
         "3. List the id of all the affected nodes.\n"
@@ -45,6 +46,5 @@ AGENT_PROMPTS = {
         "   a. Execute Cypher query on the Neo4j database to gather additional details.\n"
         "   b. Use the results to expand on why the issue was triggered.\n"
         "5. Report the details about all the nodes: prioritize `ContractRecord` and `LicenseRecord` details and the names of `contractOrg` and `licenseOrg`.\n"
-        "6. Report also the generated SPARQL query for SHACL validation.\n"
         "Pay special attention to relevant date fields and information that helps explain the reason for the validation error.\n\n" """
 }
