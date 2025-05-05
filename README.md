@@ -158,6 +158,8 @@ WHERE
 RETURN path
 LIMIT 5
 ```
+</details>
+
 <details>
   <summary>360-Degree View Test Query</summary>
 
