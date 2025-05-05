@@ -100,6 +100,7 @@ Run the following queries to check the results of your agent.
 
 <details>
   <summary>Regulatory Compliance Test Query</summary>
+
 ```cypher
 MATCH path=(c:Contract)<-[:INCLUDED_IN_CONTRACT]-(contractRecord:ContractRecord)-[:HAS_VENDOR]->(contractOrg:Organization)-[:BELONGS_TO_ORG_GROUP]->(o:OrganizationGroup)<-[:BELONGS_TO_ORG_GROUP]-(licenseOrg:Organization)-[:ORG_HAS_LICENSE]->(license:LicenseRecord)
 WHERE licenseOrg.name = "Stage Left, Inc."
@@ -135,6 +136,7 @@ LIMIT 5
 
 <details>
   <summary>Conflict of Interest Test Query - Example 2</summary>
+
 ```cypher
  MATCH 
    path=(p2:Person)<-[:RECORD_RESOLVED_TO]-(:PersonRecord)
@@ -166,7 +168,6 @@ MATCH path=(pr:PersonRecord)-[:RECORD_RESOLVED_TO]->(p:Person)
                 (o:Organization)<-[:HAS_VENDOR]-(c:ContractRecord)-[:INCLUDED_IN_CONTRACT]->(x:Contract)
 WHERE p.name = "Sister Marie Valerie Chaillou"
 AND c.amount <> 0
-
 RETURN path
 LIMIT 10
 ```
