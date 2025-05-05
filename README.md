@@ -4,12 +4,12 @@
 **The Knowledge Laboratory (KLAB)** is a hub for learning, conducting research, and building community around cutting-edge knowledge technologies.
 
 1. [Building a Hybrid Knowledge Graph System](#-building-a-hybrid-knowledge-graph-system)  
-   - [Step 1: Create and Activate Your Virtual Environment](#-step-1-create-and-activate-your-virtual-environment)  
-   - [Step 2: Install Required Dependencies](#-step-2-install-required-dependencies)  
-   - [Step 3: Download the Data](#-step-3-download-the-data)  
-   - [Step 4: Build the Chicago Knowledge Graph (CKG)](#-step-4-build-the-chicago-knowledge-graph-ckg)  
-   - [Step 5: Extract RDF from the LPG Database](#-step-5-extract-rdf-from-the-lpg-database)  
-   - [Step 6: Use Case Analysis](#-step-6-use-case-analysis)
+   - [Create and Activate Your Virtual Environment](#-step-1-create-and-activate-your-virtual-environment)  
+   - [Install Required Dependencies](#-step-2-install-required-dependencies)  
+   - [Download the Data](#-step-3-download-the-data)  
+   - [Build the Chicago Knowledge Graph (CKG)](#-step-4-build-the-chicago-knowledge-graph-ckg)  
+   - [Extract RDF from the LPG Database](#-step-5-extract-rdf-from-the-lpg-database)  
+   - [Use Case Analysis](#-step-6-use-case-analysis)
 
 2. [Unlocking Graph Neural Networks](#-unlocking-graph-neural-networks)  
    - [Theory](#-theory)  
@@ -57,7 +57,8 @@ Run the full setup script:
 ./run_chicago_factory.sh
 ```
 
-Or manually execute each step:
+<details>
+  <summary>Or manually execute each step:</summary>
 
 ```bash
 python -m factory.chicago.owner --backend neo4j --file Business_Owners_20240103.csv
@@ -69,6 +70,8 @@ python -m factory.chicago.org_cluster --backend neo4j
 python -m factory.chicago.dept_similarity --backend neo4j
 ```
 
+</details>
+
 To delete and reset the graph:
 
 ```bash
@@ -77,7 +80,7 @@ python -m factory.chicago.delete --backend neo4j
 
 ### 🔁 Step 5: Extract RDF from the LPG Database
 
-The RDF generation is performed manually. Look at the `mapping.py` files in the `regulatory_compliance/`, `conflict_of_interest/`, `three_sixty_degree_view` folders within the `analysis`.
+The RDF generation is currently performed **manually**. Look at the `mapping.py` files in the `regulatory_compliance/`, `conflict_of_interest/`, `three_sixty_degree_view` folders within the `analysis` and adjust the queries accordingly based on your Neo4j node ids.
 
 ```bash
 python -m analysis.chicago.regulatory_compliance.rdf_mapper --backend neo4j
@@ -92,6 +95,82 @@ To build the KG, you have to update the `config.ini` file in the root folder (op
 - 📘 [Regulatory Compliance](analysis/chicago/01_regulatory_compliance.ipynb)
 - 🧭 [Conflict of Interest](analysis/chicago/02_conflict_of_interest.ipynb)
 - 🕸️ [360-Degree View](analysis/chicago/03_three_sixty_degree_view.ipynb)
+
+Run the following queries to check the results of your agent.
+
+<details>
+  <summary>Regulatory Compliance Test Query</summary>
+```cypher
+MATCH path=(c:Contract)<-[:INCLUDED_IN_CONTRACT]-(contractRecord:ContractRecord)-[:HAS_VENDOR]->(contractOrg:Organization)-[:BELONGS_TO_ORG_GROUP]->(o:OrganizationGroup)<-[:BELONGS_TO_ORG_GROUP]-(licenseOrg:Organization)-[:ORG_HAS_LICENSE]->(license:LicenseRecord)
+WHERE licenseOrg.name = "Stage Left, Inc."
+RETURN path
+```
+</details>
+
+<details>
+  <summary>Conflict of Interest Test Query - Example 1</summary>
+
+```cypher
+ MATCH 
+   path=(p2:Person)<-[:RECORD_RESOLVED_TO]-(:PersonRecord)
+   -[:WORKS_FOR_DEPARTMENT]->(dept1:Department)
+   -[:IS_SIMILAR_TO]->(dept2:Department)
+   -[:ASSIGNS_CONTRACT]->(:Contract)<-[:INCLUDED_IN_CONTRACT]-(c:ContractRecord)
+   -[:HAS_VENDOR]->(vendor1:Organization)
+   -[:BELONGS_TO_ORG_GROUP]->(orgGroup:OrganizationGroup)<-[:BELONGS_TO_ORG_GROUP]-
+   (vendor2:Organization)<-[:WORKS_FOR_ORG]-(p1:Person)
+WHERE 
+   (
+      elementId(p2) = "4:5bc9e9e3-9f8e-4060-84df-00fa505e2753:527380"OR 
+      elementId(p1) = "4:5bc9e9e3-9f8e-4060-84df-00fa505e2753:520260"
+   )
+   AND vendor1 <> vendor2
+   AND p1 <> p2
+   AND toLower(p1.name) <> toLower(p2.name)
+   AND split(toLower(p1.name), " ")[-1] = split(toLower(p2.name), " ")[-1]
+RETURN path
+LIMIT 5
+```
+</details>
+
+<details>
+  <summary>Conflict of Interest Test Query - Example 2</summary>
+```cypher
+ MATCH 
+   path=(p2:Person)<-[:RECORD_RESOLVED_TO]-(:PersonRecord)
+   -[:WORKS_FOR_DEPARTMENT]->(dept1:Department)
+   -[:IS_SIMILAR_TO]->(dept2:Department)
+   -[:ASSIGNS_CONTRACT]->(:Contract)<-[:INCLUDED_IN_CONTRACT]-(c:ContractRecord)
+   -[:HAS_VENDOR]->(vendor1:Organization)
+   -[:BELONGS_TO_ORG_GROUP]->(orgGroup:OrganizationGroup)<-[:BELONGS_TO_ORG_GROUP]-
+   (vendor2:Organization)<-[:WORKS_FOR_ORG]-(p1:Person)
+WHERE 
+   (
+      elementId(p2) = "4:5bc9e9e3-9f8e-4060-84df-00fa505e2753:527206"OR 
+      elementId(p1) = "4:5bc9e9e3-9f8e-4060-84df-00fa505e2753:486091"
+   )
+   AND vendor1 <> vendor2
+   AND p1 <> p2
+   AND toLower(p1.name) <> toLower(p2.name)
+   AND split(toLower(p1.name), " ")[-1] = split(toLower(p2.name), " ")[-1]
+RETURN path
+LIMIT 5
+```
+<details>
+  <summary>360-Degree View Test Query</summary>
+
+```cypher
+MATCH path=(pr:PersonRecord)-[:RECORD_RESOLVED_TO]->(p:Person)
+                -[:WORKS_FOR_ORG]->(:Organization)
+                -[:BELONGS_TO_ORG_GROUP]->(:OrganizationGroup)<-[:BELONGS_TO_ORG_GROUP]-
+                (o:Organization)<-[:HAS_VENDOR]-(c:ContractRecord)-[:INCLUDED_IN_CONTRACT]->(x:Contract)
+WHERE p.name = "Sister Marie Valerie Chaillou"
+AND c.amount <> 0
+
+RETURN path
+LIMIT 10
+```
+</details>
 
 ---
 
